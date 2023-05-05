@@ -1,4 +1,4 @@
-version: '3'
+version: '3.3'
 services:
   rabbitmq1:
     image: rabbitmq:3-management
@@ -19,10 +19,19 @@ services:
       - traefik.enable=true
       - traefik.docker.network=traefik-public
       - traefik.constraint-label=traefik-public
-      - traefik.http.routers.rabbitmq1.rule=Host(`rabbitmq.${DOMAIN_NAME?Variable not set}`)
-      - traefik.http.services.rabbitmq-01.loadbalancer.server.port=15672
+      - traefik.http.routers.rabbitmq.rule=Host(`rabbitmq.${DOMAIN_NAME?Variable not set}`)
+      - traefik.http.routers.rabbitmq-http.entrypoints=http
+      - traefik.http.routers.rabbitmq-http.middlewares=https-redirect
+      - traefik.http.services.rabbitmq.loadbalancer.server.port=15672
+      - traefik.http.routers.rabbitmq-https.rule=Host(`rabbitmq.${DOMAIN_NAME?Variable not set}`)
+      - traefik.http.routers.rabbitmq-https.entrypoints=https
+      - traefik.http.routers.rabbitmq-https.tls=true
+      - traefik.http.routers.rabbitmq-https.tls.certresolver=le
       - traefik.tcp.routers.rabbitmq.entrypoints=rabbitmq
       - traefik.tcp.services.rabbitmq.loadbalancer.server.port=5672
+    networks:
+      - net
+      - traefik-public
   rabbitmq2:
     image: rabbitmq:3-management
     hostname: rabbitmq2
@@ -45,6 +54,8 @@ services:
       - traefik.tcp.routers.rabbitmq.rule=HostSNI(`*`)
       - traefik.tcp.routers.rabbitmq.entrypoints=rabbitmq
       - traefik.tcp.services.rabbitmq.loadbalancer.server.port=5672
+    networks:
+      - net
   rabbitmq3:
     image: rabbitmq:3-management
     hostname: rabbitmq3
@@ -67,3 +78,11 @@ services:
       - traefik.tcp.routers.rabbitmq.rule=HostSNI(`*`)
       - traefik.tcp.routers.rabbitmq.entrypoints=rabbitmq
       - traefik.tcp.services.rabbitmq.loadbalancer.server.port=5672
+    networks:
+      - net
+networks:
+  net:
+    driver: overlay
+    attachable: true
+  traefik-public:
+    external: true
