@@ -1,4 +1,4 @@
-# RabbitMQ Cluster Docker
+# RabbitMQ Cluster Docker Swarm with TRAEFIK
 
 Set up a RabbitMQ Cluster environment on your device using the official pure [RabbitMQ](https://hub.docker.com/_/rabbitmq/) with Docker Swarm and [Traefik](https://github.com/traefik/traefik) Proxy.
 
