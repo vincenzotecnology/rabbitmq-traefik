@@ -15,20 +15,20 @@ services:
       placement:
         constraints:
           - node.role == manager
-    labels:
-      - traefik.enable=true
-      - traefik.docker.network=traefik-public
-      - traefik.constraint-label=traefik-public
-      - traefik.http.routers.rabbitmq.rule=Host(`rabbitmq.${DOMAIN_NAME?Variable not set}`)
-      - traefik.http.routers.rabbitmq-http.entrypoints=http
-      - traefik.http.routers.rabbitmq-http.middlewares=https-redirect
-      - traefik.http.services.rabbitmq.loadbalancer.server.port=15672
-      - traefik.http.routers.rabbitmq-https.rule=Host(`rabbitmq.${DOMAIN_NAME?Variable not set}`)
-      - traefik.http.routers.rabbitmq-https.entrypoints=https
-      - traefik.http.routers.rabbitmq-https.tls=true
-      - traefik.http.routers.rabbitmq-https.tls.certresolver=le
-      - traefik.tcp.routers.rabbitmq.entrypoints=rabbitmq
-      - traefik.tcp.services.rabbitmq.loadbalancer.server.port=5672
+        labels:
+          - traefik.enable=true
+          - traefik.docker.network=traefik-public
+          - traefik.constraint-label=traefik-public
+          - traefik.http.routers.rabbitmq.rule=Host(`rabbitmq.${DOMAIN_NAME?Variable not set}`)
+          - traefik.http.routers.rabbitmq-http.entrypoints=http
+          - traefik.http.routers.rabbitmq-http.middlewares=https-redirect
+          - traefik.http.services.rabbitmq.loadbalancer.server.port=15672
+          - traefik.http.routers.rabbitmq-https.rule=Host(`rabbitmq.${DOMAIN_NAME?Variable not set}`)
+          - traefik.http.routers.rabbitmq-https.entrypoints=https
+          - traefik.http.routers.rabbitmq-https.tls=true
+          - traefik.http.routers.rabbitmq-https.tls.certresolver=le
+          - traefik.tcp.routers.rabbitmq.entrypoints=rabbitmq
+          - traefik.tcp.services.rabbitmq.loadbalancer.server.port=5672
     networks:
       - net
       - traefik-public
@@ -46,14 +46,14 @@ services:
     deploy:
       placement:
         constraints:
-          - node.role == worker
-    labels:
-      - traefik.enable=true
-      - traefik.docker.network=traefik-public
-      - traefik.constraint-label=traefik-public
-      - traefik.tcp.routers.rabbitmq.rule=HostSNI(`*`)
-      - traefik.tcp.routers.rabbitmq.entrypoints=rabbitmq
-      - traefik.tcp.services.rabbitmq.loadbalancer.server.port=5672
+          - node.role == manager
+      labels:
+        - traefik.enable=true
+        - traefik.docker.network=traefik-public
+        - traefik.constraint-label=traefik-public
+        - traefik.tcp.routers.rabbitmq.rule=HostSNI(`*`)
+        - traefik.tcp.routers.rabbitmq.entrypoints=rabbitmq
+        - traefik.tcp.services.rabbitmq.loadbalancer.server.port=5672
     networks:
       - net
   rabbitmq3:
@@ -70,14 +70,14 @@ services:
     deploy:
       placement:
         constraints:
-          - node.role == worker
-    labels:
-      - traefik.enable=true
-      - traefik.docker.network=traefik-public
-      - traefik.constraint-label=traefik-public
-      - traefik.tcp.routers.rabbitmq.rule=HostSNI(`*`)
-      - traefik.tcp.routers.rabbitmq.entrypoints=rabbitmq
-      - traefik.tcp.services.rabbitmq.loadbalancer.server.port=5672
+          - node.role == manager
+      labels:
+          - traefik.enable=true
+          - traefik.docker.network=traefik-public
+          - traefik.constraint-label=traefik-public
+          - traefik.tcp.routers.rabbitmq.rule=HostSNI(`*`)
+          - traefik.tcp.routers.rabbitmq.entrypoints=rabbitmq
+          - traefik.tcp.services.rabbitmq.loadbalancer.server.port=5672
     networks:
       - net
 networks:
